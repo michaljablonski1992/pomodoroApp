@@ -1,3 +1,4 @@
+# file Rakefile
 # -*- coding: utf-8 -*-
 $:.unshift("/Library/RubyMotion/lib")
 

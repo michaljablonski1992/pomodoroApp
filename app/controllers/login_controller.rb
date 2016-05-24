@@ -1,5 +1,5 @@
 class LoginController < Formotion::FormController
-  API_LOGIN_ENDPOINT = "http://localhost:3000/api/v1/sessions.json"
+  API_LOGIN_ENDPOINT = "https://localhost:3000/api/v1/sessions.json"
 
   def init
     form = Formotion::Form.new({
@@ -44,7 +44,7 @@ class LoginController < Formotion::FormController
                                  password: form.render[:password]
                                 } })
 
-    SVProgressHUD.showWithStatus("Logging in", maskType:SVProgressHUDMaskTypeGradient)
+    # SVProgressHUD.showWithStatus("Logging in", maskType:SVProgressHUDMaskTypeGradient)
     BW::HTTP.post(API_LOGIN_ENDPOINT, { headers: headers, payload: data } ) do |response|
       if response.status_description.nil?
         App.alert(response.error_message)
@@ -61,7 +61,7 @@ class LoginController < Formotion::FormController
           App.alert(response.to_str)
         end
       end
-      SVProgressHUD.dismiss
+      # SVProgressHUD.dismiss
     end
   end
 end

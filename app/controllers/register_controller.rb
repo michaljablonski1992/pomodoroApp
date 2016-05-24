@@ -1,5 +1,5 @@
 class RegisterController < Formotion::FormController
-  API_REGISTER_ENDPOINT = "http://localhost:3000/api/v1/registrations.json"
+  API_REGISTER_ENDPOINT = "https://localhost:3000/api/v1/registrations.json"
 
   def init
     form = Formotion::Form.new({
@@ -40,7 +40,7 @@ class RegisterController < Formotion::FormController
       }]
     })
     form.on_submit do
-      self.register
+      register
     end
     super.initWithForm(form)
   end
@@ -60,16 +60,12 @@ class RegisterController < Formotion::FormController
                                  password_confirmation: form.render[:password_confirmation]
                                 } })
 
-    if form.render[:email].nil? ||
-       form.render[:name].nil? ||
-       form.render[:password].nil? ||
-       form.render[:password_confirmation].nil?
+    if form.render[:email].nil? || form.render[:name].nil? || form.render[:password].nil? || form.render[:password_confirmation].nil?
       App.alert("Please complete all the fields")
     else
       if form.render[:password] != form.render[:password_confirmation]
         App.alert("Your password doesn't match confirmation, check again")
       else
-        SVProgressHUD.showWithStatus("Registering new account...", maskType:SVProgressHUDMaskTypeGradient)
         BW::HTTP.post(API_REGISTER_ENDPOINT, { headers: headers , payload: data } ) do |response|
           if response.status_description.nil?
             App.alert(response.error_message)
@@ -86,7 +82,6 @@ class RegisterController < Formotion::FormController
               App.alert(response.to_str)
             end
           end
-          SVProgressHUD.dismiss
         end
       end
     end

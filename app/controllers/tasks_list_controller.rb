@@ -28,5 +28,5 @@ class TasksListController < UIViewController
   def logout
     UIApplication.sharedApplication.delegate.logout
   end
-  
+
 end
