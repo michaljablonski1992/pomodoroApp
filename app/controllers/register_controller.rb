@@ -79,7 +79,7 @@ class RegisterController < Formotion::FormController
             elsif response.status_code.to_s =~ /40\d/
               App.alert("Registration failed")
             else
-              App.alert(response.to_str)
+              App.alert(response.to_s)
             end
           end
         end
