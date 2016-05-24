@@ -1,5 +1,5 @@
 class RegisterController < Formotion::FormController
-  API_REGISTER_ENDPOINT = "https://localhost:3000/api/v1/registrations.json"
+  API_REGISTER_ENDPOINT = "https://pomodoro--app.herokuapp.com/api/v1/registrations.json"
 
   def init
     form = Formotion::Form.new({

@@ -1,5 +1,5 @@
 class LoginController < Formotion::FormController
-  API_LOGIN_ENDPOINT = "https://localhost:3000/api/v1/sessions.json"
+  API_LOGIN_ENDPOINT = "https://pomodoro--app.herokuapp.com/api/v1/sessions.json"
 
   def init
     form = Formotion::Form.new({
