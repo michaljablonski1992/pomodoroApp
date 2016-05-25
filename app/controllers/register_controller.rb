@@ -2,7 +2,7 @@ class RegisterController < Formotion::FormController
   API_REGISTER_ENDPOINT = "https://pomodoro--app.herokuapp.com/api/v1/registrations.json"
 
   def init
-    @form = Formotion::Form.new({
+    form = Formotion::Form.new({
       sections: [{
         rows: [{
           title: "Email",
@@ -39,10 +39,10 @@ class RegisterController < Formotion::FormController
         }]
       }]
     })
-    @form.on_submit do
+    form.on_submit do
       self.register
     end
-    super.initWithForm(@form)
+    super.initWithForm(form)
   end
 
   def viewDidLoad
@@ -54,16 +54,16 @@ class RegisterController < Formotion::FormController
   def register
     headers = { 'Content-Type' => 'application/json' }
     data = BW::JSON.generate({ user: {
-                                 email: @form.render[:email],
-                                 name: @form.render[:name],
-                                 password: @form.render[:password],
-                                 password_confirmation: @form.render[:password_confirmation]
+                                 email: form.render[:email],
+                                 name: form.render[:name],
+                                 password: form.render[:password],
+                                 password_confirmation: form.render[:password_confirmation]
                                 } })
 
-    if @form.render[:email].nil? || @form.render[:name].nil? || @form.render[:password].nil? || @form.render[:password_confirmation].nil?
+    if form.render[:email].empty? || form.render[:name].empty? || form.render[:password].empty? || form.render[:password_confirmation].empty?
       App.alert("Please complete all the fields")
     else
-      if @form.render[:password] != @form.render[:password_confirmation]
+      if form.render[:password] != form.render[:password_confirmation]
         App.alert("Your password doesn't match confirmation, check again")
       else
         BW::HTTP.post(API_REGISTER_ENDPOINT, { headers: headers , payload: data } ) do |response|
@@ -71,15 +71,19 @@ class RegisterController < Formotion::FormController
             App.alert(response.error_message)
           else
             if response.ok?
-              json = BW::JSON.parse(response.body.to_str)
+              json = BW::JSON.parse(response.body.to_s)
               App::Persistence['authToken'] = json['data']['auth_token']
-              App.alert(json['info'])
-              self.navigationController.dismissModalViewControllerAnimated(true)
-              TasksListController.controller.refresh
+              @menuController = MainMenuController.alloc.init
+              self.navigationController.pushViewController(@menuController, animated:false)
             elsif response.status_code.to_s =~ /40\d/
               App.alert("Registration failed")
             else
-              App.alert(response.to_s)
+              json = BW::JSON.parse(response.body.to_s)
+              error = ""
+              json['info'].each do |k, v|
+                error << "#{k.capitalize}: #{v.first}. \n"
+              end
+              App.alert(error)
             end
           end
         end

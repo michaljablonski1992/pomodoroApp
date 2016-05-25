@@ -44,24 +44,22 @@ class LoginController < Formotion::FormController
                                  password: form.render[:password]
                                 } })
 
-    # SVProgressHUD.showWithStatus("Logging in", maskType:SVProgressHUDMaskTypeGradient)
     BW::HTTP.post(API_LOGIN_ENDPOINT, { headers: headers, payload: data } ) do |response|
       if response.status_description.nil?
         App.alert(response.error_message)
       else
         if response.ok?
-          json = BW::JSON.parse(response.body.to_str)
+          json = BW::JSON.parse(response.body.to_s)
           App::Persistence['authToken'] = json['data']['auth_token']
           App.alert(json['info'])
-          self.navigationController.dismissModalViewControllerAnimated(true)
-          TasksListController.controller.refresh
+          @menuController = MainMenuController.alloc.init
+          self.navigationController.pushViewController(@menuController, animated:false)
         elsif response.status_code.to_s =~ /40\d/
           App.alert("Login failed")
         else
-          App.alert(response.to_str)
+          App.alert(response.to_s)
         end
       end
-      # SVProgressHUD.dismiss
     end
   end
 end

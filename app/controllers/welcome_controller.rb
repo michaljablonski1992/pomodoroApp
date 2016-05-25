@@ -12,13 +12,13 @@ class WelcomeController < UIViewController
 
     @containerView = UIView.alloc.initWithFrame([[0, 50], [self.view.frame.size.width, 100]])
 
-    @welcomeTitleLabel = UILabel.alloc.initWithFrame([[10, 10], [self.view.frame.size.width - 20, 20]])
+    @welcomeTitleLabel = UILabel.alloc.initWithFrame([[10, 25], [self.view.frame.size.width - 20, 20]])
     @welcomeTitleLabel.font = UIFont.boldSystemFontOfSize(20)
     @welcomeTitleLabel.text = 'Welcome to the App!'
 
     @containerView.addSubview(@welcomeTitleLabel)
 
-    @welcomeLabel = UILabel.alloc.initWithFrame([[10, 35], [self.view.frame.size.width - 20, 20]])
+    @welcomeLabel = UILabel.alloc.initWithFrame([[10, 45], [self.view.frame.size.width - 20, 20]])
     @welcomeLabel.text = 'Please select an option to start using it!'
 
     @containerView.addSubview(@welcomeLabel)
@@ -26,6 +26,7 @@ class WelcomeController < UIViewController
     @registerButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
     @registerButton.frame = [[10, 65], [(self.view.frame.size.width  / 2) - 15, 40]]
     @registerButton.setTitle('Register', forState: UIControlStateNormal)
+    @registerButton.backgroundColor = UIColor.cyanColor
     @registerButton.addTarget(self,
                               action:'register',
                               forControlEvents:UIControlEventTouchUpInside)
@@ -35,6 +36,7 @@ class WelcomeController < UIViewController
     @loginButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
     @loginButton.frame = [[(self.view.frame.size.width  / 2) + 5, 65], [(self.view.frame.size.width  / 2) - 15, 40]]
     @loginButton.setTitle('Login', forState: UIControlStateNormal)
+    @loginButton.backgroundColor = UIColor.cyanColor
     @loginButton.addTarget(self,
                            action:'login',
                            forControlEvents:UIControlEventTouchUpInside)
@@ -47,11 +49,11 @@ class WelcomeController < UIViewController
 
   def register
     @registerController = RegisterController.alloc.init
-    self.navigationController.pushViewController(@registerController, animated:true)
+    self.navigationController.pushViewController(@registerController, animated:false)
   end
 
   def login
     @loginController = LoginController.alloc.init
-    self.navigationController.pushViewController(@loginController, animated:true)
+    self.navigationController.pushViewController(@loginController, animated:false)
   end
 end
