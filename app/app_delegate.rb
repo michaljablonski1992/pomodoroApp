@@ -6,6 +6,7 @@ class AppDelegate
 
     @navigationController = UINavigationController.alloc.init
     @window.rootViewController = @navigationController
+    setDefaultOptions
 
     if App::Persistence['authToken'].nil?
       showWelcomeController
@@ -39,6 +40,11 @@ class AppDelegate
       App::Persistence['authToken'] = nil
       showWelcomeController
     end
+  end
+
+  def setDefaultOptions
+    App::Persistence['shortBreakTime'] = "5" if App::Persistence['shortBreakTime'].nil?
+    App::Persistence['longBreakTime'] = "15" if App::Persistence['longBreakTime'].nil?
   end
 
 end
