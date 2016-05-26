@@ -1,5 +1,7 @@
 class PomodoroPanelController < UIViewController
 
+  attr_accessor :pomodoro_timer
+
   def self.controller
     @controller ||= PomodoroPanelController.alloc.initWithNibName(nil, bundle:nil)
   end
@@ -9,6 +11,8 @@ class PomodoroPanelController < UIViewController
 
     self.title = "Pomodoro Panel"
     self.view.backgroundColor = UIColor.whiteColor
+    self.view.tintColor = UIColor.blackColor
+
 
     @containerView = UIView.alloc.initWithFrame([[0, 50], [self.view.frame.size.width, self.view.frame.size.height]])
 
@@ -43,20 +47,78 @@ class PomodoroPanelController < UIViewController
 
     @containerView.addSubview(@pomodoroButton)
 
+    @timer_label = UILabel.alloc.initWithFrame([[(self.view.frame.size.width  / 2) - 65, 150], [(self.view.frame.size.width  / 2) - 15, 40]])
+    @timer_label.font = UIFont.boldSystemFontOfSize(40)
+    @timer_label.text = "00:00"
+    @timer_label.sizeToFit
+    @containerView.addSubview(@timer_label)
+
+    @startButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
+    @startButton.frame = [[40, 220], [(self.view.frame.size.width  / 3) - 30, 30]]
+    @startButton.setTitle('Start', forState: UIControlStateNormal)
+    @startButton.tintColor = UIColor.whiteColor
+    @startButton.backgroundColor = UIColor.greenColor
+    @startButton.addTarget(self,
+                              action:'startTimer',
+                              forControlEvents:UIControlEventTouchUpInside)
+
+    @containerView.addSubview(@startButton)
+
+    @stopButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
+    @stopButton.frame = [[139, 220], [(self.view.frame.size.width  / 3) - 30, 30]]
+    @stopButton.setTitle('Stop', forState: UIControlStateNormal)
+    @stopButton.tintColor = UIColor.whiteColor
+    @stopButton.backgroundColor = UIColor.redColor
+    @stopButton.addTarget(self,
+                           action:'stopTimer',
+                           forControlEvents:UIControlEventTouchUpInside)
+
+    @containerView.addSubview(@stopButton)
+
+
+    @resetButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
+    @resetButton.frame = [[237, 220], [(self.view.frame.size.width  / 3) - 30, 30]]
+    @resetButton.backgroundColor = UIColor.lightGrayColor
+    @resetButton.tintColor = UIColor.whiteColor
+    @resetButton.setTitle('Reset', forState: UIControlStateNormal)
+    @resetButton.addTarget(self,
+                              action:'resetTimer',
+                              forControlEvents:UIControlEventTouchUpInside)
+
+    @containerView.addSubview(@resetButton)
 
     self.view.addSubview(@containerView)
 
   end
 
   def shortBreak
-    App.alert("shortu")
+    mins = App::Persistence['shortBreakTime'].to_i
+    @timer_label.text = "%02d:%02d" % [mins, 00]
   end
 
   def longBreak
-    App.alert("longu")
+    mins = App::Persistence['longBreakTime'].to_i
+    @timer_label.text = "%02d:%02d" % [mins, 00]
   end
 
   def pomodoro
-    App.alert("pomodoro")
+    mins = 25
+    @timer_label.text = "%02d:%02d" % [mins, 00]
+  end
+
+  def timer
+    @timer ||= PomodoroTimer.new
+  end
+
+  def startTimer
+    App.alert('start')
+  end
+
+  def stopTimer
+    App.alert('stop')
+  end
+
+  def resetTimer
+    App.alert('reset')
   end
 end

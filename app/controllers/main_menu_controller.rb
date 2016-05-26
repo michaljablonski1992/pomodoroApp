@@ -9,6 +9,8 @@ class MainMenuController < UIViewController
 
     self.title = "Main menu"
     self.view.backgroundColor = UIColor.whiteColor
+    self.view.tintColor = UIColor.blackColor
+
 
     @containerView = UIView.alloc.initWithFrame([[0, 50], [self.view.frame.size.width, self.view.frame.size.height]])
 
@@ -36,6 +38,7 @@ class MainMenuController < UIViewController
     @showOptionsButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
     @showOptionsButton.frame = [[40, 65], [(self.view.frame.size.width) - 80, 30]]
     @showOptionsButton.backgroundColor = UIColor.cyanColor
+
     @showOptionsButton.setTitle('Options', forState: UIControlStateNormal)
     @showOptionsButton.addTarget(self,
                               action:'showOptions',

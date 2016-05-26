@@ -9,6 +9,8 @@ class WelcomeController < UIViewController
 
     self.title = "Welcome"
     self.view.backgroundColor = UIColor.whiteColor
+    self.view.tintColor = UIColor.blackColor
+
 
     @containerView = UIView.alloc.initWithFrame([[0, 50], [self.view.frame.size.width, 100]])
 
@@ -43,7 +45,6 @@ class WelcomeController < UIViewController
 
     @containerView.addSubview(@loginButton)
 
-    # Finally add the scrollview to the main view
     self.view.addSubview(@containerView)
   end
 

@@ -9,6 +9,7 @@ class OptionsController < UIViewController
 
     self.title = "Options"
     self.view.backgroundColor = UIColor.whiteColor
+    self.view.tintColor = UIColor.blackColor
 
     @containerView = UIView.alloc.initWithFrame([[0, 50], [self.view.frame.size.width, self.view.frame.size.height]])
 
