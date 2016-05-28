@@ -4,6 +4,7 @@ class PomodoroTimer
   attr_reader :delegate
 
   def initialize
+    self.count = 0
   end
 
   def setUpPomodoro
@@ -32,6 +33,10 @@ class PomodoroTimer
     NSRunLoop.currentRunLoop.addTimer(ns_timer,
       forMode: NSDefaultRunLoopMode)
     delegate.pomodoro_timer_did_start(self) if delegate
+  end
+
+  def valid?
+    ns_timer && ns_timer.valid?
   end
 
   def invalidate
