@@ -1,4 +1,6 @@
 class PomodoroPanelController < UIViewController
+  API_POMODOROS_COUNT_ENDPOINT = "https://pomodoro--app.herokuapp.com/api/v1/pomodoros_made.json"
+
 
   attr_accessor :pomodoro_timer
 
@@ -157,6 +159,10 @@ class PomodoroPanelController < UIViewController
     @pomodoros_made_count_label.text = "33"
   end
 
+  def resetPomodoros
+    updatePomodoros(0)
+  end
+
   private
 
   def start_new_pomodoro_timer
@@ -168,6 +174,31 @@ class PomodoroPanelController < UIViewController
     mins = pomodoro_timer.count / 60
     secs = pomodoro_timer.count % 60
     @timer_label.text = "%02d:%02d" % [mins, secs]
+  end
+
+  def updatePomodoros(count)
+    headers = { 'Content-Type' => 'application/json' }
+    data = BW::JSON.generate({ user: {
+                                 auth_token: App::Persistence['authToken']
+                               },
+                                pomodoros_made: {
+                                  count: count
+                                  } })
+
+    BW::HTTP.put(API_POMODOROS_COUNT_ENDPOINT, { headers: headers, payload: data } ) do |response|
+      if response.status_description.nil?
+        App.alert(response.error_message)
+      else
+        if response.ok?
+          json = BW::JSON.parse(response.body.to_s)
+          App.alert("Update completed!")
+        elsif response.status_code.to_s =~ /40\d/
+          App.alert("Update failed")
+        else
+          App.alert(response.to_s)
+        end
+      end
+    end
   end
 
   def pomodoro_timer
