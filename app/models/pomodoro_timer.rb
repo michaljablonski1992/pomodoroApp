@@ -1,25 +1,31 @@
 class PomodoroTimer
   attr_accessor :count
   attr_accessor :ns_timer
+  attr_accessor :pomodoros_made
+  attr_accessor :pomodoro_set_up
   attr_reader :delegate
 
   def initialize
     self.count = 0
+    self.pomodoro_set_up = false
   end
 
   def setUpPomodoro
     minutes = 25
     @count = minutes * 60
+    self.pomodoro_set_up = true
   end
 
   def setUpShortBreak
     minutes = App::Persistence['shortBreakTime'].to_i
     @count = minutes * 60
+    self.pomodoro_set_up = false
   end
 
   def setUpLongBreak
     minutes = App::Persistence['longBreakTime'].to_i
     @count = minutes * 60
+    self.pomodoro_set_up = false
   end
 
   def delegate=(object)
@@ -42,6 +48,10 @@ class PomodoroTimer
   def invalidate
     ns_timer.invalidate
     delegate.pomodoro_timer_did_invalidate(self) if delegate
+  end
+
+  def pomodoro?
+    self.pomodoro_set_up == true
   end
 
   private

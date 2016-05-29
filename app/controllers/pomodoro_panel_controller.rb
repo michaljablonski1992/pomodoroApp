@@ -85,8 +85,6 @@ class PomodoroPanelController < UIViewController
     @pomodoros_made_count_label.sizeToFit
     @containerView.addSubview(@pomodoros_made_count_label)
 
-    self.setPomodorsCountLabel
-
     @resetPomodorosButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
     @resetPomodorosButton.frame = [[(screen_width  / 3), 440], [(screen_width  / 4) + 15, 30]]
     @resetPomodorosButton.setTitle('RESET', forState: UIControlStateNormal)
@@ -100,7 +98,17 @@ class PomodoroPanelController < UIViewController
 
     self.view.addSubview(@containerView)
 
+    prepare_timer
+  end
 
+  def pomodoro_timer
+    @pomodoro_timer ||= PomodoroTimer.new
+  end
+
+  def prepare_timer
+    pomodoros_made = App::Persistence['pomodorosMade']
+    pomodoro_timer.pomodoros_made = pomodoros_made
+    setPomodorosMadeLabel
   end
 
   def shortBreak
@@ -148,19 +156,26 @@ class PomodoroPanelController < UIViewController
   end
 
   def pomodoro_timer_did_finish(pomodoro_timer)
+    if pomodoro_timer.pomodoro?
+      pomodoro_timer.pomodoros_made += 1
+      updatePomodoros(pomodoro_timer.pomodoros_made)
+      App::Persistence['pomodorosMade'] = pomodoro_timer.pomodoros_made
+      setPomodorosMadeLabel
+      App.alert("It's end of the pomodoro. Take a break.")
+    else
+      App.alert("It's end of the break. Pomodoro time!")
+    end
     pomodoro_timer.invalidate
   end
 
-  def resetPomodoros
-    App.alert('resetujemy')
-  end
-
-  def setPomodorsCountLabel
-    @pomodoros_made_count_label.text = "33"
+  def setPomodorosMadeLabel
+    @pomodoros_made_count_label.text = App::Persistence['pomodorosMade'].to_s
   end
 
   def resetPomodoros
     updatePomodoros(0)
+    App::Persistence['pomodorosMade'] = 0
+    setPomodorosMadeLabel
   end
 
   private
@@ -190,8 +205,7 @@ class PomodoroPanelController < UIViewController
         App.alert(response.error_message)
       else
         if response.ok?
-          json = BW::JSON.parse(response.body.to_s)
-          App.alert("Update completed!")
+          #App::Persistence['pomodorosMade'] = count
         elsif response.status_code.to_s =~ /40\d/
           App.alert("Update failed")
         else
@@ -201,7 +215,25 @@ class PomodoroPanelController < UIViewController
     end
   end
 
-  def pomodoro_timer
-    @pomodoro_timer ||= PomodoroTimer.new
+  def getPomodorosMade
+    headers = { 'Content-Type' => 'application/json' }
+    data = { auth_token: App::Persistence['authToken'] }
+
+    BW::HTTP.get(API_POMODOROS_COUNT_ENDPOINT, { headers: headers, payload: data } ) do |response|
+      if response.status_description.nil?
+        App.alert(response.error_message)
+      else
+        if response.ok?
+          json = BW::JSON.parse(response.body.to_s)
+          @pomodoros_made = json['data']['count']
+          App::Persistence['pomodorosMade'] = @pomodoros_made
+        elsif response.status_code.to_s =~ /40\d/
+          App.alert("Get failed!")
+        else
+          App.alert(response.to_s)
+        end
+      end
+    end
   end
+
 end

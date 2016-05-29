@@ -45,6 +45,7 @@ class AppDelegate
   def setDefaultOptions
     App::Persistence['shortBreakTime'] = "5" if App::Persistence['shortBreakTime'].nil?
     App::Persistence['longBreakTime'] = "15" if App::Persistence['longBreakTime'].nil?
+    App::Persistence['pomodorosMade'] = 0 if App::Persistence['pomodorosMade'].nil?
   end
 
 end
