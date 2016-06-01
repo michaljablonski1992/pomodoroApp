@@ -12,7 +12,7 @@ class WelcomeController < UIViewController
     self.view.tintColor = UIColor.blackColor
 
 
-    @containerView = UIView.alloc.initWithFrame([[0, 50], [self.view.frame.size.width, 100]])
+    @containerView = UIView.alloc.initWithFrame([[0, 50], [self.view.frame.size.width, self.view.frame.size.height]])
 
     @welcomeTitleLabel = UILabel.alloc.initWithFrame([[10, 25], [self.view.frame.size.width - 20, 20]])
     @welcomeTitleLabel.font = UIFont.boldSystemFontOfSize(20)
@@ -26,7 +26,7 @@ class WelcomeController < UIViewController
     @containerView.addSubview(@welcomeLabel)
 
     @registerButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-    @registerButton.frame = [[10, 65], [(self.view.frame.size.width  / 2) - 15, 40]]
+    @registerButton.frame = [[10, 95], [(self.view.frame.size.width  / 2) - 15, 30]]
     @registerButton.setTitle('Register', forState: UIControlStateNormal)
     @registerButton.backgroundColor = UIColor.cyanColor
     @registerButton.addTarget(self,
@@ -36,7 +36,7 @@ class WelcomeController < UIViewController
     @containerView.addSubview(@registerButton)
 
     @loginButton = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-    @loginButton.frame = [[(self.view.frame.size.width  / 2) + 5, 65], [(self.view.frame.size.width  / 2) - 15, 40]]
+    @loginButton.frame = [[(self.view.frame.size.width  / 2) + 5, 95], [(self.view.frame.size.width  / 2) - 15, 30]]
     @loginButton.setTitle('Login', forState: UIControlStateNormal)
     @loginButton.backgroundColor = UIColor.cyanColor
     @loginButton.addTarget(self,
